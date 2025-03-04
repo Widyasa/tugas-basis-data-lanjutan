@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 21, 2025 at 09:21 PM
+-- Generation Time: Mar 04, 2025 at 04:19 AM
 -- Server version: 5.7.33
 -- PHP Version: 8.3.2
 
@@ -461,6 +461,14 @@ INSERT INTO `subscriptions` (`id`, `user_creator_id`, `user_watcher_id`, `notifi
 ('cm7f92c1q00bwl9xkw4krnh8g', 'cm7f92brt0002l9xk1l1mww2w', 'cm7f92bsa0009l9xkcmvifr8w', 'true'),
 ('cm7f92c1r00bxl9xk2eq16zby', 'cm7f92brt0002l9xk1l1mww2w', 'cm7f92brx0003l9xkg5q1bupf', 'true');
 
+--
+-- Triggers `subscriptions`
+--
+DELIMITER $$
+CREATE TRIGGER `after_insert_subscriptions` AFTER INSERT ON `subscriptions` FOR EACH ROW UPDATE CreatorSubscribers SET subscriber_count = subscriber_count + 1 WHERE user_creator_id = NEW.user_creator_id
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -850,6 +858,17 @@ INSERT INTO `videocomments` (`id`, `video_id`, `user_id`, `comment`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `videocommentscount`
+-- (See below for the actual view)
+--
+CREATE TABLE `videocommentscount` (
+`video_id` varchar(191)
+,`comment_count` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `videolikes`
 --
 
@@ -874,6 +893,25 @@ INSERT INTO `videolikes` (`id`, `video_id`, `user_id`) VALUES
 ('cm7f92btx0023l9xkv7xadrae', 'cm7f92bt3000xl9xka2uv975k', 'cm7f92bs80008l9xk72w5f1ar'),
 ('cm7f92bty0025l9xke2p6bjk6', 'cm7f92bsy000rl9xkt4vcmr8c', 'cm7f92brt0002l9xk1l1mww2w'),
 ('cm7f92btz0027l9xkkzy6gr0y', 'cm7f92bsu000nl9xkwnut4907', 'cm7f92brq0001l9xkt54701rc');
+
+--
+-- Triggers `videolikes`
+--
+DELIMITER $$
+CREATE TRIGGER `after_insert_videolikes` AFTER INSERT ON `videolikes` FOR EACH ROW UPDATE VideoLikesCount SET like_count = like_count + 1 WHERE video_id = NEW.video_id
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `videolikescount`
+-- (See below for the actual view)
+--
+CREATE TABLE `videolikescount` (
+`video_id` varchar(191)
+,`like_count` bigint(21)
+);
 
 -- --------------------------------------------------------
 
@@ -984,6 +1022,25 @@ INSERT INTO `videoviews` (`id`, `video_id`, `user_id`) VALUES
 ('cm7f92btk001ll9xkv9unpok2', 'cm7f92bt0000tl9xkvzfwx16o', 'cm7f92bsa0009l9xkcmvifr8w'),
 ('cm7f92btm001nl9xk5gabfjs0', 'cm7f92bt60011l9xkwkc37y4t', 'cm7f92bs50007l9xkb5zkr5qy');
 
+--
+-- Triggers `videoviews`
+--
+DELIMITER $$
+CREATE TRIGGER `after_insert_videoviews` AFTER INSERT ON `videoviews` FOR EACH ROW UPDATE VideoViewsCount SET view_count = view_count + 1 WHERE video_id = NEW.video_id
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `videoviewscount`
+-- (See below for the actual view)
+--
+CREATE TABLE `videoviewscount` (
+`video_id` varchar(191)
+,`view_count` bigint(21)
+);
+
 -- --------------------------------------------------------
 
 --
@@ -1010,6 +1067,33 @@ INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_na
 ('61845f30-a29d-415a-9d3a-e42be09176b5', '67d59fbe4f556682d69af5371e1405b1c13bd7b65d9ec19446c92a6e656f2ab8', '2025-02-21 20:38:02.503', '20250129054856_add_migration', NULL, NULL, '2025-02-21 20:38:02.460', 1),
 ('6749a9be-f61e-4e2c-9bf5-654144e276d8', 'cdb35e1f4ff91533c82f0d693a101d12fe3bef2632bf204dce1e521f64186345', '2025-02-21 20:38:11.836', '20250221203809_init', NULL, NULL, '2025-02-21 20:38:09.778', 1),
 ('763c57c7-4dc8-49bd-b061-3d83ab890681', '48915314074890f0f53092afb3f994be968994ebf73c28c1ac604a2d6169ab18', '2025-02-21 20:54:54.260', '20250221205454_update', NULL, NULL, '2025-02-21 20:54:54.225', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `videocommentscount`
+--
+DROP TABLE IF EXISTS `videocommentscount`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `videocommentscount`  AS SELECT `videocomments`.`video_id` AS `video_id`, count(0) AS `comment_count` FROM `videocomments` GROUP BY `videocomments`.`video_id``video_id`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `videolikescount`
+--
+DROP TABLE IF EXISTS `videolikescount`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `videolikescount`  AS SELECT `videolikes`.`video_id` AS `video_id`, count(0) AS `like_count` FROM `videolikes` GROUP BY `videolikes`.`video_id``video_id`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `videoviewscount`
+--
+DROP TABLE IF EXISTS `videoviewscount`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `videoviewscount`  AS SELECT `videoviews`.`video_id` AS `video_id`, count(0) AS `view_count` FROM `videoviews` GROUP BY `videoviews`.`video_id``video_id`  ;
 
 --
 -- Indexes for dumped tables
