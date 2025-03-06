@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 04, 2025 at 04:19 AM
+-- Generation Time: Mar 06, 2025 at 03:34 AM
 -- Server version: 5.7.33
 -- PHP Version: 8.3.2
 
@@ -236,6 +236,17 @@ INSERT INTO `creatormembers` (`id`, `member_id`, `membership_id`, `membership_st
 ('cm7f92c2400cdl9xkixdb2hfp', 'cm7f92bs30006l9xkv6wxm538', 'cm7f92bxq0079l9xkio3p5jbr', 'inactive', '2025-02-21 20:55:04.589', '2025-02-21 20:55:04.589', NULL),
 ('cm7f92c2500cfl9xkpto07h0k', 'cm7f92bs30006l9xkv6wxm538', 'cm7f92bxn0075l9xkdcc0ghvp', 'active', '2025-02-21 20:55:04.590', '2025-02-21 20:55:04.590', NULL),
 ('cm7f92c2700chl9xkpc1jhvbv', 'cm7f92bsa0009l9xkcmvifr8w', 'cm7f92bxq0079l9xkio3p5jbr', 'active', '2025-02-21 20:55:04.591', '2025-02-21 20:55:04.591', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `creatorsubscribers`
+-- (See below for the actual view)
+--
+CREATE TABLE `creatorsubscribers` (
+`user_creator_id` varchar(191)
+,`subscriber_count` bigint(21)
+);
 
 -- --------------------------------------------------------
 
@@ -1067,6 +1078,15 @@ INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_na
 ('61845f30-a29d-415a-9d3a-e42be09176b5', '67d59fbe4f556682d69af5371e1405b1c13bd7b65d9ec19446c92a6e656f2ab8', '2025-02-21 20:38:02.503', '20250129054856_add_migration', NULL, NULL, '2025-02-21 20:38:02.460', 1),
 ('6749a9be-f61e-4e2c-9bf5-654144e276d8', 'cdb35e1f4ff91533c82f0d693a101d12fe3bef2632bf204dce1e521f64186345', '2025-02-21 20:38:11.836', '20250221203809_init', NULL, NULL, '2025-02-21 20:38:09.778', 1),
 ('763c57c7-4dc8-49bd-b061-3d83ab890681', '48915314074890f0f53092afb3f994be968994ebf73c28c1ac604a2d6169ab18', '2025-02-21 20:54:54.260', '20250221205454_update', NULL, NULL, '2025-02-21 20:54:54.225', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `creatorsubscribers`
+--
+DROP TABLE IF EXISTS `creatorsubscribers`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `creatorsubscribers`  AS SELECT `subscriptions`.`user_creator_id` AS `user_creator_id`, count(0) AS `subscriber_count` FROM `subscriptions` GROUP BY `subscriptions`.`user_creator_id``user_creator_id`  ;
 
 -- --------------------------------------------------------
 
